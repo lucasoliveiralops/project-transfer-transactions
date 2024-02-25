@@ -31,6 +31,7 @@ WORKDIR /var/www
 
 
 COPY . /var/www
+
 RUN composer install --no-dev -o && php bin/hyperf.php
 
 EXPOSE 9501
