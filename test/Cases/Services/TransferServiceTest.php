@@ -12,13 +12,15 @@ use App\Model\UserIdentifier;
 use App\Model\Wallet;
 use App\Service\Transaction\Authorizer\AuthorizerProviderInterface;
 use App\Service\Transaction\TransferService;
+use Faker\Generator;
 use Mockery;
 use Hyperf\Stringable\Str;
 use HyperfTest\Cases\Factory;
 use Hyperf\Testing\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Faker\Factory as Faker;
+
 use function Hyperf\Support\make;
-use function Swoole\Coroutine\Http\get;
 
 class TransferServiceTest extends TestCase
 {
@@ -27,6 +29,8 @@ class TransferServiceTest extends TestCase
     private User $payer;
     private User $payee;
     private TransferService $transferService;
+    private Generator $faker;
+
 
     public function setUp(): void
     {
@@ -46,6 +50,9 @@ class TransferServiceTest extends TestCase
             'authorizationService' => $this->mockTransactionAuthorizedService(),
             'eventDispatcher' => $this->mockEventDispatcher()
         ]);
+
+
+        $this->faker = Faker::create();
     }
 
     private function mockTransactionAuthorizedService(bool $return = true): AuthorizerProviderInterface
@@ -66,19 +73,22 @@ class TransferServiceTest extends TestCase
             ->makePartial();
     }
 
-    public function test_nonexistent_payer_return_error(){
+    public function test_nonexistent_payer_return_error(): void
+    {
         $this->expectException(UserNotFound::class);
 
         $this->transferService->transfer(Str::uuid()->toString(), $this->payee->id, 100);
     }
 
-    public function test_nonexistent_payee_return_error(){
+    public function test_nonexistent_payee_return_error(): void
+    {
         $this->expectException(UserNotFound::class);
 
         $this->transferService->transfer($this->payer->id, Str::uuid()->toString(), 100);
     }
 
-    public function test_seller_transfer_to_user_return_error(){
+    public function test_seller_transfer_to_user_return_error(): void
+    {
         $this->expectException(ForbiddenTransferForSeller::class);
 
         $seller = $this->factory(User::class, [
@@ -88,7 +98,8 @@ class TransferServiceTest extends TestCase
         $this->transferService->transfer($seller->id, $this->payee->id, 100);
     }
 
-    public function test_user_transfer_to_seller_without_money_return_error(){
+    public function test_user_transfer_to_seller_without_money_return_error(): void
+    {
         $this->expectException(InsufficientBalanceForTransaction::class);
 
         $this->payer->wallet->update([
@@ -98,7 +109,8 @@ class TransferServiceTest extends TestCase
         $this->transferService->transfer($this->payer->id, $this->payee->id, 11);
     }
 
-    public function test_user_transfer_to_seller_but_transaction_return_not_authorized(){
+    public function test_user_transfer_to_seller_but_transaction_return_not_authorized(): void
+    {
         $this->expectException(UnauthorizedTransaction::class);
 
         $this->payer->wallet->update([
@@ -113,27 +125,34 @@ class TransferServiceTest extends TestCase
         $transferService->transfer($this->payer->id, $this->payee->id, 11);
     }
 
-    public function test_user_transfer_to_seller_return_success(){
+    public function test_user_transfer_to_seller_return_success(): void
+    {
         $this->payer->wallet->update([
             'current_balance' => 50.00
         ]);
+
+        $randValue = $this->faker->randomFloat(nbMaxDecimals: 2, max: 50);
 
         $payerBalance = $this->payer->wallet()->first()->current_balance;
         $payeeBalance = $this->payee->wallet()->first()->current_balance;
 
-        $this->transferService->transfer($this->payer->id, $this->payee->id, 11);
+        $this->transferService->transfer($this->payer->id, $this->payee->id, $randValue);
 
         $actualPayerBalance = $this->payer->wallet()->first()->current_balance;
         $actualPayeeBalance = $this->payee->wallet()->first()->current_balance;
 
-        $this->assertEquals($payerBalance - 11, $actualPayerBalance);
-        $this->assertEquals($payeeBalance + 11, $actualPayeeBalance);
+
+        $this->assertEquals(round($payerBalance - $randValue, 2), $actualPayerBalance);
+        $this->assertEquals(round($payeeBalance + $randValue, 2), $actualPayeeBalance);
     }
 
-    public function test_user_transfer_to_user_return_success(){
+    public function test_user_transfer_to_user_return_success(): void
+    {
         $this->payer->wallet->update([
             'current_balance' => 50.00
         ]);
+
+        $randValue = $this->faker->randomFloat(nbMaxDecimals: 2, max: 50);
 
         $payee = $this->factory(User::class);
         $this->factory(UserIdentifier::class, ['user_id' => $payee->id]);
@@ -142,12 +161,12 @@ class TransferServiceTest extends TestCase
         $payerBalance = $this->payer->wallet()->first()->current_balance;
         $payeeBalance = $payee->wallet()->first()->current_balance;
 
-        $this->transferService->transfer($this->payer->id, $payee->id, 11);
+        $this->transferService->transfer($this->payer->id, $payee->id, $randValue);
 
         $actualPayerBalance = $this->payer->wallet()->first()->current_balance;
         $actualPayeeBalance = $payee->wallet()->first()->current_balance;
 
-        $this->assertEquals($payerBalance - 11, $actualPayerBalance);
-        $this->assertEquals($payeeBalance + 11, $actualPayeeBalance);
+        $this->assertEquals(round($payerBalance - $randValue, 2), $actualPayerBalance);
+        $this->assertEquals(round($payeeBalance + $randValue, 2), $actualPayeeBalance);
     }
 }

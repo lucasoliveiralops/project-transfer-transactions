@@ -26,4 +26,19 @@ Hyperf\Di\ClassLoader::init();
 
 $container = require BASE_PATH . '/config/container.php';
 
+$config = $container->get(\Hyperf\Contract\ConfigInterface::class);
+
+$config->set(Hyperf\Contract\StdoutLoggerInterface::class, [
+    'log_level' => [
+        Psr\Log\LogLevel::ALERT,
+        Psr\Log\LogLevel::CRITICAL,
+        Psr\Log\LogLevel::EMERGENCY,
+        Psr\Log\LogLevel::ERROR,
+        Psr\Log\LogLevel::INFO,
+        Psr\Log\LogLevel::NOTICE,
+        Psr\Log\LogLevel::WARNING,
+    ],
+]);
+
+
 $container->get(Hyperf\Contract\ApplicationInterface::class);

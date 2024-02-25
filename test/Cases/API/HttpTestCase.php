@@ -14,7 +14,8 @@ namespace HyperfTest\Cases\API;
 
 use Hyperf\Testing\Client;
 use PHPUnit\Framework\TestCase;
-use function HyperfTest\make;
+
+use function Hyperf\Support\make;
 
 /**
  * Class HttpTestCase.
