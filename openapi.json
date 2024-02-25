@@ -11,5 +11,62 @@
     }
   ],
   "paths": {
+    "/transactions/transfer": {
+      "post": {
+        "tags": [
+          "Transferência"
+        ],
+        "summary": "Realiza uma transferência entre dois usuários",
+        "description": "Realiza uma transferência entre dois usuários",
+        "requestBody": {
+          "description": "Custom Field a ser criado",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transferência realizada com sucesso!"
+          },
+          "403": {
+              "description": "Acontece quando ocorre algum erro de permissão para realizar a transferência"
+          },
+          "404": {
+            "description": "Usuário não foi encontrado no sistema"
+          },
+          "422": {
+            "description": "Erro de validação, dados incorretos"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TransferRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["payer", "payee", "value"],
+        "properties": {
+          "payer": {
+            "type": "string",
+            "example": "a4d29f00-ad07-4c59-b3b9-f999c9d9b535"
+          },
+          "payee": {
+            "type": "string",
+            "example": "112bffcc-e486-41c4-9459-a4e5e5b3407e"
+          },
+          "value": {
+            "type": "number",
+            "example": 10.00
+          }
+        }
+      }
+    }
   }
 }
