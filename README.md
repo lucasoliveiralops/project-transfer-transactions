@@ -20,3 +20,11 @@ Utilizei algumas estruturas do HyperF para mostrar domínio e conhecimento do Fr
 
 Foram feitos testes de integração e testes na camada de serviço, para executa-los basta acessar o container docker e
 rodar: vendor/bin/co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always
+
+# Dúvida / Sugestão
+
+O verbo http sugerido é o Verbo Post, que significa a criação de um recurso, porém ao meu ver, mesmo que essa transferência
+origine um novo recurso (Uma transação), o ato solicitado é uma transferência, que seria uma atualização de um recurso,
+204 ou 200 dependendo do caso.
+
+Porém me ative e mantive a requisição como post.

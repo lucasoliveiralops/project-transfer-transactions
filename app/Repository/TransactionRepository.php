@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Enum\TransactionOperation;
 use App\Model\Transaction;
-use App\Model\User;
 use App\Repository\Interface\TransactionRepositoryInterface;
 use Hyperf\DbConnection\Db;
 

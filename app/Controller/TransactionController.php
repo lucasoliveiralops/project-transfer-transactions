@@ -34,8 +34,7 @@ class TransactionController
                 $request->validated()['value'],
             );
 
-            return $this->response->json([])
-                ->withStatus(Status::CREATED);
+            return $this->response->withStatus(Status::CREATED);
         } catch (UserNotFound $e) {
             throw new NotFoundHttpException($e->getMessage());
         } catch (ForbiddenTransferForSeller|

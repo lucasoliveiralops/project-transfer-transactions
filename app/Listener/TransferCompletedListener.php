@@ -14,9 +14,7 @@ class TransferCompletedListener implements ListenerInterface
     public function __construct(
         private readonly NotificationProviderInterface $notificationProvider,
         private readonly ContainerInterface $container
-    )
-    {
-    }
+    ){}
 
     public function listen(): array
     {

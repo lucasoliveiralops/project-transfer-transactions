@@ -23,5 +23,4 @@ class AbstractFormRequest extends FormRequest implements ValidatesWhenResolved
             throw new ValidateFormRequest($exception->validator->errors()->all());
         }
     }
-
 }

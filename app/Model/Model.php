@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use Hyperf\Database\Model\Events\Creating;
 use Hyperf\DbConnection\Model\Model as BaseModel;
 use Hyperf\Stringable\Str;
 
@@ -25,4 +24,3 @@ abstract class Model extends BaseModel
         $this->id = Str::uuid()->toString();
     }
 }
-
