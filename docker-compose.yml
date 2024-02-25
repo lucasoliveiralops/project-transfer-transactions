@@ -1,0 +1,36 @@
+version: "3"
+volumes:
+  mysql-db-data:
+    driver: local
+services:
+  transfer-transactions:
+    container_name: transfer-transactions
+    tty: true
+    build: ./
+    volumes:
+      - ./:/var/www/
+    environment:
+      - PHP_IDE_CONFIG=serverName=app
+    ports:
+      - "9511:9501"
+    entrypoint: bash -c "php bin/hyperf.php server:watch"
+    depends_on:
+      - redis
+      - mysql
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    volumes:
+      - mysql-db-data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_TCP_PORT: 3315
+    ports:
+      - "3315:3315"
+  redis:
+    container_name: redis-for-queue
+    image: redis:latest
+    ports:
+      - '6379:6379'

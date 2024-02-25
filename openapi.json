@@ -1,0 +1,15 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Documentação da API de Transações",
+    "description": "Essa API realiza a transferência de valores entre usuários e lojistas",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https"
+    }
+  ],
+  "paths": {
+  }
+}
