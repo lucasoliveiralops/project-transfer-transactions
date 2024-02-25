@@ -38,11 +38,9 @@ class TransactionController
                 ->withStatus(Status::CREATED);
         } catch (UserNotFound $e) {
             throw new NotFoundHttpException($e->getMessage());
-        } catch (
-        ForbiddenTransferForSeller|
+        } catch (ForbiddenTransferForSeller|
         InsufficientBalanceForTransaction|
-        UnauthorizedTransaction $e
-        ) {
+        UnauthorizedTransaction $e) {
             throw new ForbiddenHttpException($e->getMessage());
         }
     }
