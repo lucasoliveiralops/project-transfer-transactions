@@ -32,7 +32,6 @@ class TransferServiceTest extends TestCase
     private TransferService $transferService;
     private Generator $faker;
 
-
     public function setUp(): void
     {
         parent::setUp();
@@ -51,7 +50,6 @@ class TransferServiceTest extends TestCase
             'authorizationService' => $this->mockTransactionAuthorizedService(),
             'eventDispatcher' => $this->mockEventDispatcher()
         ]);
-
 
         $this->faker = Faker::create();
     }
