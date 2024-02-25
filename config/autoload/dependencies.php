@@ -12,6 +12,8 @@ use App\Service\Transaction\Authorizer\TransactionAuthorizerService;
 use App\Service\Transaction\Authorizer\AuthorizerProviderInterface;
 use App\Service\Notification\NotificationService;
 use App\Service\Notification\NotificationProviderInterface;
+use App\Repository\TransactionRepository;
+use App\Repository\Interface\TransactionRepositoryInterface;
 
 /**
  * This file is part of Hyperf.
@@ -25,7 +27,8 @@ use App\Service\Notification\NotificationProviderInterface;
 return [
     UserRepositoryInterface::class => UserRepository::class,
     WalletRepositoryInterface::class => WalletRepository::class,
-    AuthorizerProviderInterface::class => TransactionAuthorizerService::class,
+    TransactionRepositoryInterface::class => TransactionRepository::class,
     RepositoryInterface::class => Repository::class,
-    NotificationProviderInterface::class => NotificationService::class
+    AuthorizerProviderInterface::class => TransactionAuthorizerService::class,
+    NotificationProviderInterface::class => NotificationService::class,
 ];

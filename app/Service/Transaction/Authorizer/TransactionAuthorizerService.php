@@ -7,8 +7,6 @@ namespace App\Service\Transaction\Authorizer;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\HandlerStack;
-use Hyperf\Guzzle\CoroutineHandler;
 use Swoole\Http\Status;
 
 use function Hyperf\Support\env;
@@ -21,7 +19,6 @@ class TransactionAuthorizerService implements AuthorizerProviderInterface
     {
         return new Client([
             'base_uri' => env('URL_TRANSACTION_AUTHORIZER'),
-            'handler' => HandlerStack::create(new CoroutineHandler()),
             'timeout' => 5,
             'swoole' => [
                 'timeout' => 10,

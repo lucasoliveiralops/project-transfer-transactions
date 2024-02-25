@@ -6,7 +6,6 @@ use Hyperf\Validation\Contract\Rule;
 
 class MoneyRule implements Rule
 {
-
     public function passes(string $attribute, mixed $value): bool
     {
         if($value <= 0) {
