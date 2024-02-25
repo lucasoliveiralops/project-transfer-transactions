@@ -11,11 +11,11 @@ use App\Repository\Interface\UserRepositoryInterface;
 class UserService
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private readonly UserRepositoryInterface $userRepository
     )
     {}
 
-    public function findOrFail(string $userId): User
+    public function findOrFail(string $userId): ?User
     {
         $user = $this->userRepository->getById($userId);
 

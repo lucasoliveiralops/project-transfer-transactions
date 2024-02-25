@@ -15,7 +15,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
         parent::__construct($database);
     }
 
-    public function getById(string $userId): User
+    public function getById(string $userId): ?User
     {
         return $this->userModel->find($userId); 
     }

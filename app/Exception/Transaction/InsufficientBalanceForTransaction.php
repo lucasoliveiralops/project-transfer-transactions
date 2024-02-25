@@ -6,7 +6,7 @@ namespace App\Exception\Transaction;
 
 use Exception;
 
-class InsufficientBalanceFromTransaction extends Exception
+class InsufficientBalanceForTransaction extends Exception
 {
     public function __construct()
     {
