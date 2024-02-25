@@ -9,8 +9,8 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\HandlerStack;
 use Hyperf\Guzzle\CoroutineHandler;
-
 use Swoole\Http\Status;
+
 use function Hyperf\Support\env;
 
 class TransactionAuthorizerService implements AuthorizerProviderInterface
