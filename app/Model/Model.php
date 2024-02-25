@@ -25,3 +25,4 @@ abstract class Model extends BaseModel
         $this->id = Str::uuid()->toString();
     }
 }
+

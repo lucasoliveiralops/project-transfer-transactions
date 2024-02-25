@@ -67,5 +67,4 @@ class TransferService
             throw new ErrorToProcessTransaction($e);
         }
     }
-
 }
