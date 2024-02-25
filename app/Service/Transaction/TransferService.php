@@ -9,7 +9,7 @@ use App\Enum\UserType;
 use App\Event\TransferCompleted;
 use App\Exception\Transaction\ErrorToProcessTransaction;
 use App\Exception\Transaction\ForbiddenTransferForSeller;
-use App\Exception\Transaction\InsufficientBalanceFromTransaction;
+use App\Exception\Transaction\InsufficientBalanceForTransaction;
 use App\Exception\Transaction\UnauthorizedTransaction;
 use App\Model\User;
 use App\Repository\Interface\RepositoryInterface;
@@ -39,7 +39,7 @@ class TransferService
             throw new ForbiddenTransferForSeller();
         }
         if(! $this->walletService->hasAmount($payer, $amount)){
-            throw new InsufficientBalanceFromTransaction();
+            throw new InsufficientBalanceForTransaction();
         }
         if(! $this->authorizationService->authorize()){
             throw new UnauthorizedTransaction();

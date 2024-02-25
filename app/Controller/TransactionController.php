@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Exception\Transaction\ForbiddenTransferForSeller;
-use App\Exception\Transaction\InsufficientBalanceFromTransaction;
+use App\Exception\Transaction\InsufficientBalanceForTransaction;
 use App\Exception\Transaction\UnauthorizedTransaction;
 use App\Exception\User\UserNotFound;
 use App\Request\TransferRequest;
@@ -37,7 +37,7 @@ class TransactionController
             throw new NotFoundHttpException($e->getMessage());
         } catch (
                 ForbiddenTransferForSeller|
-                InsufficientBalanceFromTransaction|
+                InsufficientBalanceForTransaction|
                 UnauthorizedTransaction $e
                 ) {
             throw new ForbiddenHttpException($e->getMessage());

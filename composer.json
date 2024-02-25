@@ -27,7 +27,7 @@
         "hyperf/devtool": "~3.1.0",
         "hyperf/testing": "~3.1.0",
         "hyperf/watcher": "*",
-        "mockery/mockery": "^1.0",
+        "mockery/mockery": "^1.6",
         "phpstan/phpstan": "^1.0",
         "swoole/ide-helper": "^5.0"
     },

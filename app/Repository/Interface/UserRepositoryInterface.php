@@ -6,5 +6,5 @@ use App\Model\User;
 
 interface UserRepositoryInterface
 {
-    public function getById(string $userId): User;
+    public function getById(string $userId): ?User;
 }
