@@ -61,6 +61,7 @@ class TransferTransactionTest extends HttpTestCase
             $mock
         );
     }
+
     private function mockTransactionAuthorizedService(bool $return = true): void
     {
         $mock = Mockery::mock(AuthorizerProviderInterface::class)
