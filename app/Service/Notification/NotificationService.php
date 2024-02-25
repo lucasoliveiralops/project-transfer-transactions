@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\HandlerStack;
 use Hyperf\Guzzle\CoroutineHandler;
 use Swoole\Http\Status;
+
 use function Hyperf\Support\env;
 
 class NotificationService implements NotificationProviderInterface
