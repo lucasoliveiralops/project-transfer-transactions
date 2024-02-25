@@ -16,7 +16,7 @@ Me ative a manter no Form Request apenas validações de tipagem e mantive na ca
 
 Utilizei algumas estruturas do HyperF para mostrar domínio e conhecimento do Framework, como async-queue.
 
-# Teste
+# Testes
 
 Foram feitos testes de integração e testes na camada de serviço, para executa-los basta acessar o container docker e
 rodar: vendor/bin/co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always
