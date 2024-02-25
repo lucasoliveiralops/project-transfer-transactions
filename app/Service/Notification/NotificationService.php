@@ -5,8 +5,6 @@ namespace App\Service\Notification;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\HandlerStack;
-use Hyperf\Guzzle\CoroutineHandler;
 use Swoole\Http\Status;
 
 use function Hyperf\Support\env;
@@ -19,7 +17,6 @@ class NotificationService implements NotificationProviderInterface
     {
         return new Client([
             'base_uri' => env('URL_NOTIFICATION_SERVICE'),
-            'handler' => HandlerStack::create(new CoroutineHandler()),
             'timeout' => 5,
             'swoole' => [
                 'timeout' => 10,

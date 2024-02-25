@@ -7,15 +7,20 @@ namespace App\Service\Wallet;
 use App\Enum\TransactionOperation;
 use App\Model\User;
 use App\Repository\Interface\WalletRepositoryInterface;
+use App\Service\Transaction\TransactionService;
 
 class WalletService
 {
-    public function __construct(private readonly WalletRepositoryInterface $walletRepository)
-    {}
+    public function __construct(
+        private readonly WalletRepositoryInterface $walletRepository,
+        private readonly TransactionService        $transactionService,
+    ){}
 
     public function hasAmount(User $user, float $amount): bool
     {
-        if($this->currentBalanceByUser($user) < $amount){
+        $balance = $this->walletRepository->getByUserId($user->id)?->current_balance;
+
+        if($balance < $amount){
             return false;
         }
 
@@ -24,23 +29,13 @@ class WalletService
 
     public function changeBalance(User $user, float $amount, TransactionOperation $operation): bool
     {
-        if($operation == TransactionOperation::Loss){
-            $newBalance = $this->currentBalanceByUser($user) - $amount;
+        $wallet = $this->walletRepository->getByUserId($user->id);
 
-            return $this->walletRepository->updateBalanceByUserId($user->id, $newBalance);
-        }
+        $newBalance = $operation == TransactionOperation::Loss ?
+            $wallet?->current_balance - $amount :
+            $wallet?->current_balance + $amount;
 
-        if($operation == TransactionOperation::Earned){
-            $newBalance = $this->currentBalanceByUser($user) + $amount;
-
-            return $this->walletRepository->updateBalanceByUserId($user->id, $newBalance);
-        }
-
-        return false;
-    }
-
-    private function currentBalanceByUser(User $user): ?float
-    {
-        return $this->walletRepository->getByUserId($user->id)?->current_balance;
+        return $this->walletRepository->updateBalanceByUserId($user->id, $newBalance)
+            && !empty($this->transactionService->store($wallet?->id, $amount, $operation));
     }
 }

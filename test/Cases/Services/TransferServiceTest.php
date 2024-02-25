@@ -2,6 +2,7 @@
 
 namespace HyperfTest\Cases\Services;
 
+use App\Enum\TransactionOperation;
 use App\Enum\UserType;
 use App\Exception\Transaction\ForbiddenTransferForSeller;
 use App\Exception\Transaction\InsufficientBalanceForTransaction;
@@ -141,9 +142,16 @@ class TransferServiceTest extends TestCase
         $actualPayerBalance = $this->payer->wallet()->first()->current_balance;
         $actualPayeeBalance = $this->payee->wallet()->first()->current_balance;
 
+        $transactionPayer = $this->payer->wallet->transactions()->orderBy('created_at', 'DESC')->first();
+        $transactionPayee = $this->payee->wallet->transactions()->orderBy('created_at', 'DESC')->first();
 
         $this->assertEquals(round($payerBalance - $randValue, 2), $actualPayerBalance);
         $this->assertEquals(round($payeeBalance + $randValue, 2), $actualPayeeBalance);
+
+        $this->assertEquals($randValue, $transactionPayer->value);
+        $this->assertEquals(TransactionOperation::Loss->value, $transactionPayer->operation);
+        $this->assertEquals($randValue, $transactionPayee->value);
+        $this->assertEquals(TransactionOperation::Earned->value, $transactionPayee->operation);
     }
 
     public function test_user_transfer_to_user_return_success(): void
@@ -166,7 +174,15 @@ class TransferServiceTest extends TestCase
         $actualPayerBalance = $this->payer->wallet()->first()->current_balance;
         $actualPayeeBalance = $payee->wallet()->first()->current_balance;
 
+        $transactionPayer = $this->payer->wallet->transactions()->orderBy('created_at', 'DESC')->first();
+        $transactionPayee = $payee->wallet->transactions()->orderBy('created_at', 'DESC')->first();
+
         $this->assertEquals(round($payerBalance - $randValue, 2), $actualPayerBalance);
         $this->assertEquals(round($payeeBalance + $randValue, 2), $actualPayeeBalance);
+
+        $this->assertEquals($randValue, $transactionPayer->value);
+        $this->assertEquals(TransactionOperation::Loss->value, $transactionPayer->operation);
+        $this->assertEquals($randValue, $transactionPayee->value);
+        $this->assertEquals(TransactionOperation::Earned->value, $transactionPayee->operation);
     }
 }

@@ -9,7 +9,7 @@ use App\Repository\Interface\WalletRepositoryInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Db;
 
-class WalletRepository extends  Repository implements WalletRepositoryInterface
+class WalletRepository extends Repository implements WalletRepositoryInterface
 {
     public function __construct(private readonly Wallet $walletModel, Db $database)
     {
