@@ -2,8 +2,6 @@
 
 namespace App\Repository\Interface;
 
-use App\Model\User;
-
 interface RepositoryInterface
 {
     public function beginTransaction(): void;

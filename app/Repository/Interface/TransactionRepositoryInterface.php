@@ -4,7 +4,6 @@ namespace App\Repository\Interface;
 
 use App\Enum\TransactionOperation;
 use App\Model\Transaction;
-use App\Model\User;
 
 interface TransactionRepositoryInterface
 {
