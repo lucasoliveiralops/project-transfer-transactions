@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\Transaction;
 
-use App\Enum\TransactionOperation;
 use App\Enum\UserType;
 use App\Event\TransferCompleted;
 use App\Exception\Transaction\ErrorToProcessTransaction;
 use App\Exception\Transaction\ForbiddenTransferForSeller;
-use App\Exception\Transaction\InsufficientBalanceForTransaction;
 use App\Exception\Transaction\UnauthorizedTransaction;
 use App\Model\User;
 use App\Repository\Interface\RepositoryInterface;
@@ -38,9 +36,6 @@ class TransferService
         if($payer->type != UserType::DefaultUser->value){
             throw new ForbiddenTransferForSeller();
         }
-        if(! $this->walletService->hasAmount($payer, $amount)){
-            throw new InsufficientBalanceForTransaction();
-        }
         if(! $this->authorizationService->authorize()){
             throw new UnauthorizedTransaction();
         }
@@ -53,10 +48,10 @@ class TransferService
         try {
             $this->repository->beginTransaction();
 
-            if(! $this->walletService->changeBalance($payer, $amount, TransactionOperation::Loss)){
+            if(! $this->walletService->removeBalance($payer->id, $amount)){
                 throw new ErrorToProcessTransaction();
             }
-            if( ! $this->walletService->changeBalance($payee, $amount, TransactionOperation::Earned)){
+            if( ! $this->walletService->addBalance($payee->id, $amount)){
                 throw new ErrorToProcessTransaction();
             }
 
@@ -64,7 +59,7 @@ class TransferService
             $this->eventDispatcher->dispatch(new TransferCompleted($payer, $payee, $amount));
         } catch (Throwable $e) {
             $this->repository->rollback();
-            throw new ErrorToProcessTransaction($e);
+            throw $e;
         }
     }
 }

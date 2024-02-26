@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use App\Model\Wallet;
 use App\Repository\Interface\WalletRepositoryInterface;
-use Hyperf\Database\Model\Builder;
+use Hyperf\Database\Query\Builder;
 use Hyperf\DbConnection\Db;
 
 class WalletRepository extends Repository implements WalletRepositoryInterface
@@ -16,21 +16,13 @@ class WalletRepository extends Repository implements WalletRepositoryInterface
         parent::__construct($database);
     }
 
-    public function getByUserId(string $userId): Wallet|Builder|null
+    public function getLockedForUpdateByUserId(string $userId): null|Wallet|Builder
     {
-        return $this->walletModel->where('user_id', $userId)->first();
+        return $this->walletModel::lockForUpdate()->where('user_id', $userId)->first();
     }
 
-    public function updateBalanceByUserId(string $userId, float $newBalance): bool
+    public function updateBalance(Wallet $wallet, float $newBalance): bool
     {
-        $wallet = $this->getByUserId($userId);
-
-        if(empty($wallet)) {
-            return false;
-        }
-
-        return $wallet->update([
-            'current_balance' => $newBalance
-        ]);
+        return $wallet->update(['current_balance' => $newBalance]);
     }
 }

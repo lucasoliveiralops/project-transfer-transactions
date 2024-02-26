@@ -9,6 +9,8 @@ use App\Model\Wallet;
 use App\Service\Transaction\Authorizer\AuthorizerProviderInterface;
 use App\Service\Transaction\Authorizer\TransactionAuthorizerService;
 use Faker\Generator;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Event\EventDispatcher;
 use Hyperf\Stringable\Str;
@@ -17,6 +19,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Mockery;
 use Swoole\Http\Status;
 use Faker\Factory as Faker;
+
+use function Hyperf\Support\env;
+use function Swoole\Coroutine\parallel;
 
 class TransferTransactionTest extends HttpTestCase
 {
@@ -235,8 +240,10 @@ class TransferTransactionTest extends HttpTestCase
         $maxValue = $this->faker->randomFloat(nbMaxDecimals: 2, max: 5000);
         $randValue = $this->faker->randomFloat(nbMaxDecimals: 2, max: $maxValue);
 
-        $this->payer->wallet->update([
-                'current_balance' => $maxValue]
+        $this->payer->wallet->update(
+            [
+                'current_balance' => $maxValue
+            ]
         );
 
         $this->payee->update([
@@ -249,5 +256,25 @@ class TransferTransactionTest extends HttpTestCase
         ]);
 
         $this->assertEquals(Status::CREATED, $response->getStatusCode());
+    }
+
+    public function test_user_transfer_ofter_for_same_user_return_success(): void
+    {
+        $guzzle = new Client([
+            'base_uri' => env('HOST_APPLICATION'),
+        ]);
+
+        $this->payer->wallet->update(['current_balance' => 11.01]);
+
+        $payload = $this->getPayload($this->payer->id, $this->payee->id, 11.00);
+
+        parallel(4, function() use ($guzzle, $payload) {
+            try{
+                $a = $guzzle->post(self::ENDPOINT, ['json' => $payload]);
+                var_dump($a->getStatusCode());
+            } catch (GuzzleException $e){ var_dump($e->getResponse()->getStatusCode());}
+        });
+
+        $this->assertEquals(0.01, $this->payer->wallet()->first()->current_balance);
     }
 }

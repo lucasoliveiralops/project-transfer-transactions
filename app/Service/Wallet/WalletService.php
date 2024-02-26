@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Wallet;
 
 use App\Enum\TransactionOperation;
-use App\Model\User;
+use App\Exception\Transaction\InsufficientBalanceForTransaction;
 use App\Repository\Interface\WalletRepositoryInterface;
 use App\Service\Transaction\TransactionService;
 
@@ -16,26 +16,23 @@ class WalletService
         private readonly TransactionService        $transactionService,
     ){}
 
-    public function hasAmount(User $user, float $amount): bool
+    public function removeBalance(string $userId, float $amount): bool
     {
-        $balance = $this->walletRepository->getByUserId($user->id)?->current_balance;
-
-        if($balance < $amount){
-            return false;
+        $wallet = $this->walletRepository->getLockedForUpdateByUserId($userId);
+        $newBalance = $wallet->current_balance - $amount;
+        if($newBalance < 0) {
+            throw new InsufficientBalanceForTransaction();
         }
 
-        return true;
+        return $this->walletRepository->updateBalance($wallet, $newBalance)
+            && !empty($this->transactionService->store($wallet->id, $amount, TransactionOperation::Loss));
     }
 
-    public function changeBalance(User $user, float $amount, TransactionOperation $operation): bool
+    public function addBalance(string $userId, float $amount): bool
     {
-        $wallet = $this->walletRepository->getByUserId($user->id);
+        $wallet = $this->walletRepository->getLockedForUpdateByUserId($userId);
 
-        $newBalance = $operation == TransactionOperation::Loss ?
-            $wallet?->current_balance - $amount :
-            $wallet?->current_balance + $amount;
-
-        return $this->walletRepository->updateBalanceByUserId($user->id, $newBalance)
-            && !empty($this->transactionService->store($wallet?->id, $amount, $operation));
+        return $this->walletRepository->updateBalance($wallet, $wallet->current_balance + $amount)
+            && !empty($this->transactionService->store($wallet->id, $amount, TransactionOperation::Earned));
     }
 }
