@@ -3,8 +3,7 @@
 namespace App\Service\Notification;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\GuzzleException;
 use Swoole\Http\Status;
 
 use function Hyperf\Support\env;
@@ -30,13 +29,12 @@ class NotificationService implements NotificationProviderInterface
         try {
             $response = $this->getClient()->get(self::ENDPOINT);
             $responseBody = json_decode($response->getBody()->getContents());
-            $message = !empty($responseBody->message) && $responseBody->message;
+            $message = !empty($responseBody->message);
 
             if($response->getStatusCode() == Status::OK && $message) {
                 return true;
             }
-        } catch (ClientException|ServerException $e) {
-
+        } catch (GuzzleException) {
             return false;
         }
 

@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Transaction\Authorizer;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\GuzzleException;
 use Swoole\Http\Status;
 
 use function Hyperf\Support\env;
@@ -37,7 +36,7 @@ class TransactionAuthorizerService implements AuthorizerProviderInterface
             if($response->getStatusCode() == Status::OK && $message == 'Autorizado') {
                 return true;
             }
-        } catch (ClientException|ServerException $e) {
+        } catch (GuzzleException) {
             return false;
         }
 
