@@ -3,11 +3,11 @@
 namespace App\Repository\Interface;
 
 use App\Model\Wallet;
-use Hyperf\Database\Model\Builder;
+use Hyperf\Database\Query\Builder;
 
 interface WalletRepositoryInterface
 {
-    public function getByUserId(string $userId): Wallet|Builder|null;
+    public function getLockedForUpdateByUserId(string $userId): null|Wallet|Builder;
 
-    public function updateBalanceByUserId(string $userId, float $newBalance): bool;
+    public function updateBalance(Wallet $wallet, float $newBalance): bool;
 }
