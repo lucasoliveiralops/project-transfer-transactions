@@ -271,8 +271,7 @@ class TransferTransactionTest extends HttpTestCase
         parallel(4, function() use ($guzzle, $payload) {
             try{
                 $a = $guzzle->post(self::ENDPOINT, ['json' => $payload]);
-                var_dump($a->getStatusCode());
-            } catch (GuzzleException $e){ var_dump($e->getResponse()->getStatusCode());}
+            } catch (GuzzleException $e){}
         });
 
         $this->assertEquals(0.01, $this->payer->wallet()->first()->current_balance);
