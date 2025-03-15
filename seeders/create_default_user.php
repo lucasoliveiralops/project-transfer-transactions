@@ -1,14 +1,21 @@
 <?php
 
 declare(strict_types=1);
-
-use Hyperf\Database\Model\Factory as FactoryDatabase;
-use Hyperf\Database\Seeders\Seeder;
-use App\Model\User;
-use App\Model\UserIdentifier;
-use App\Model\Wallet;
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+use App\Infraestructure\Model\User;
+use App\Infraestructure\Model\UserIdentifier;
+use App\Infraestructure\Model\Wallet;
 use Faker\Factory;
 use Faker\Generator;
+use Hyperf\Database\Model\Factory as FactoryDatabase;
+use Hyperf\Database\Seeders\Seeder;
 
 use function Hyperf\Support\env;
 

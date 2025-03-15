@@ -1,12 +1,19 @@
 <?php
 
 declare(strict_types=1);
-
-use Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler;
-use Hyperf\Command\Listener\FailToHandleListener;
-use App\Listener\TransferCompletedListener;
-
 /**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+use App\Infraestructure\Listener\TransferCompletedListener;
+use Hyperf\Command\Listener\FailToHandleListener;
+use Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler;
+
+/*
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
@@ -17,5 +24,5 @@ use App\Listener\TransferCompletedListener;
 return [
     ErrorExceptionHandler::class,
     FailToHandleListener::class,
-    TransferCompletedListener::class
+    TransferCompletedListener::class,
 ];

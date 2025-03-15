@@ -1,21 +1,28 @@
 <?php
 
 declare(strict_types=1);
-
-use App\Repository\Repository;
-use App\Repository\WalletRepository;
-use App\Repository\UserRepository;
-use App\Repository\Interface\RepositoryInterface;
-use App\Repository\Interface\UserRepositoryInterface;
-use App\Repository\Interface\WalletRepositoryInterface;
-use App\Service\Transaction\Authorizer\TransactionAuthorizerService;
-use App\Service\Transaction\Authorizer\AuthorizerProviderInterface;
-use App\Service\Notification\NotificationService;
-use App\Service\Notification\NotificationProviderInterface;
-use App\Repository\TransactionRepository;
-use App\Repository\Interface\TransactionRepositoryInterface;
-
 /**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+use App\Domain\Repository\RepositoryInterface;
+use App\Domain\Repository\TransactionRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Repository\WalletRepositoryInterface;
+use App\Domain\Services\Authorizer\AuthorizerProviderInterface;
+use App\Domain\Services\Notification\NotificationProviderInterface;
+use App\Infraestructure\Authorizer\TransactionAuthorizerService;
+use App\Infraestructure\Notification\NotificationService;
+use App\Infraestructure\Repository\Repository;
+use App\Infraestructure\Repository\TransactionRepository;
+use App\Infraestructure\Repository\UserRepository;
+use App\Infraestructure\Repository\WalletRepository;
+
+/*
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
